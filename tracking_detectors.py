@@ -93,10 +93,7 @@ def yolo_body_tracker(video_path='videos/Georges.mp4', model_to_use="yolov8n.pt"
 	operator_IDs = determines_operator_IDs(ID_list)
 	print(operator_IDs)
 
-	
 
-
-yolo_body_tracker()
 
 
 def find_ind_max(counter_list):
@@ -143,6 +140,10 @@ def determines_operator_IDs(ID_list):
 		ind_max = find_ind_max(counter_list)
 
 	return operator_IDs
+
+
+yolo_body_tracker()
+
 
 # IDS=[[1,2],[1],[1,2],[1,3],[1,2,3],[2,3,4],[5],[6,7],[1,3]]
 #
