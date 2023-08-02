@@ -93,11 +93,7 @@ def yolo_body_tracker(video_path='videos/Georges.mp4', model_to_use="yolov8n.pt"
 	operator_IDs = determines_operator_IDs(ID_list)
 	print(operator_IDs)
 
-	# print(results)
-	# print(results[3].boxes.id)
-	# print(results[3].boxes.xyxy)
-	# print(results[5].boxes.id)
-	# print(results[5].boxes.xyxy)
+	
 
 
 yolo_body_tracker()
@@ -120,18 +116,20 @@ def find_ind_max(counter_list):
 def IDs_to_ban(ID_list, ID_operator):
 	to_ban=[]
 	for IDs in ID_list:
-		if ID_operator in IDs:
-			for ID in IDs:
-				if ID != ID_operator and ID not in to_ban:
-					to_ban.append(ID)
+		if IDs != None:
+			if ID_operator in IDs:
+				for ID in IDs:
+					if ID != ID_operator and ID not in to_ban:
+						to_ban.append(ID)
 	return to_ban
 
 
 def determines_operator_IDs(ID_list):
 	counter_list = [0]*100
 	for IDs in ID_list:
-		for ID in IDs:
-			counter_list[ID-1] += 1
+		if IDs != None:
+			for ID in IDs:
+				counter_list[int(ID)-1] += 1
 
 	operator_IDs = []
 
@@ -141,7 +139,7 @@ def determines_operator_IDs(ID_list):
 		operator_IDs.append(ind_max + 1)
 		to_ban = IDs_to_ban(ID_list, ind_max+1)
 		for ID in to_ban:
-			counter_list[ID-1] = 0
+			counter_list[int(ID)-1] = 0
 		ind_max = find_ind_max(counter_list)
 
 	return operator_IDs
