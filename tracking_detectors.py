@@ -85,11 +85,68 @@ def color_finder(video_path, colors_to_detect_properties=new_orange_jacket_color
 	return positions_pixel
 
 
-
-def yolo_body_tracker(video_path, model_to_use="yolov8l.pt"):
+def yolo_body_tracker(video_path='videos/Georges.mp4', model_to_use="yolov8n.pt"):
 	model = YOLO(model_to_use)
-	# accepts all formats - image/dir/Path/URL/video/PIL/ndarray. 0 for webcam
-	results = model.track(source=video_path, show=True, device='cpu')  # Display preds. Accepts all YOLO predict arguments
+	results = model.track(source=video_path, save=True, show=False, save_txt=True, conf=0.2, classes=[0, 14, 15, 16, 17, 18, 19, 20, 21, 77])
+
+	ID_list = [r.boxes.id for r in results]
+	operator_IDs = determines_operator_IDs(ID_list)
 
 
-#yolo_body_tracker("videos/Georges.mp4")
+	# print(results)
+	# print(results[3].boxes.id)
+	# print(results[3].boxes.xyxy)
+	# print(results[5].boxes.id)
+	# print(results[5].boxes.xyxy)
+
+
+# yolo_body_tracker()
+
+
+def find_ind_max(counter_list):
+	ind_max = 0
+	maxi = 0
+	for ind, count in enumerate(counter_list):
+		if count >= maxi:
+			maxi = count
+			ind_max = ind
+
+	if maxi != 0:
+		return ind_max
+	else:
+		return -1
+
+
+def IDs_to_ban(ID_list, ID_operator):
+	to_ban=[]
+	for IDs in ID_list:
+		if ID_operator in IDs:
+			for ID in IDs:
+				if ID != ID_operator and ID not in to_ban:
+					to_ban.append(ID)
+	return to_ban
+
+
+def determines_operator_IDs(ID_list):
+	counter_list = [0]*100
+	for IDs in ID_list:
+		for ID in IDs:
+			counter_list[ID-1] += 1
+
+	operator_IDs = []
+
+	ind_max = find_ind_max(counter_list)
+	while ind_max != -1:
+		counter_list[ind_max] = 0
+		operator_IDs.append(ind_max + 1)
+		to_ban = IDs_to_ban(ID_list, ind_max+1)
+		for ID in to_ban:
+			counter_list[ID-1] = 0
+		ind_max = find_ind_max(counter_list)
+
+	return operator_IDs
+
+# IDS=[[1,2],[1],[1,2],[1,3],[1,2,3],[2,3,4],[5],[6,7],[1,3]]
+#
+#
+# print(determines_operator_IDs(IDS))

@@ -272,11 +272,10 @@ def calibrate_camera():
 	real_life_coordinates = get_real_life_coordinates()
 	number_of_points = len(real_life_coordinates)
 	for position_number in range(1, number_of_points + 1):
-		input(
-			f"Go to position {position_number} {real_life_coordinates[position_number - 1]}\nThen press enter and turn on yourself\n")
+		input(f"Go to position {position_number} {real_life_coordinates[position_number - 1]}\nThen press enter and turn on yourself\n")
 		print('wait')
 		camera.start_recording(f"videos_calibration/point{position_number}.h264")
-		sleep(5)  # Record for 5pseconds
+		sleep(5)  # Record for 5 seconds
 		camera.stop_recording()
 
 	reference_positions = []
@@ -317,7 +316,7 @@ image_pts = np.array(
 
 
 def main_test():
-	recalibrate = input("Would you like to recalibrate ? ")
+	recalibrate = input("Would you like to recalibrate ? (y/n) ")
 	if recalibrate == "y" or recalibrate == "Y":  # If the camera is not installed the same way (change of location or orientation)
 		homography_matrix = calibrate_camera()
 	else:
@@ -346,4 +345,5 @@ def main_test():
 		print(positions_to_distance(path))
 
 
-# main_test()
+
+main_test()
