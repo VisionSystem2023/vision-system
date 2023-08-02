@@ -100,7 +100,7 @@ def yolo_body_tracker(video_path='videos/Georges.mp4', model_to_use="yolov8n.pt"
 	# print(results[5].boxes.xyxy)
 
 
-# yolo_body_tracker()
+yolo_body_tracker()
 
 
 def find_ind_max(counter_list):
