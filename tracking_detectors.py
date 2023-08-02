@@ -91,7 +91,7 @@ def yolo_body_tracker(video_path='videos/Georges.mp4', model_to_use="yolov8n.pt"
 
 	ID_list = [r.boxes.id for r in results]
 	operator_IDs = determines_operator_IDs(ID_list)
-
+	print(operator_IDs)
 
 	# print(results)
 	# print(results[3].boxes.id)
