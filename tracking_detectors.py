@@ -90,9 +90,28 @@ def yolo_body_tracker(video_path='videos/Georges.mp4', model_to_use="yolov8n.pt"
 	results = model.track(source=video_path, save=True, show=False, save_txt=True, conf=0.2, classes=[0, 14, 15, 16, 17, 18, 19, 20, 21, 77])
 
 	ID_list = [r.boxes.id for r in results]
+	list_positions = [r.boxes.xywh for r in results]
+	
 	operator_IDs = determines_operator_IDs(ID_list)
-	print(operator_IDs)
+	
+	operator_positions = []
+	
+	for ind, positions in enumerate(list_positions):
+		IDs = ID_list[ind]
+		if len(positions) == 0:
+			operator_positions.append([None, None])
+		elif IDs is not None:
+			for i, ID in enumerate(IDs):
+				if ID in operator_IDs:
+					operator_positions.append(positions[i][:2])
+					break
+				elif i == len(IDs)-1:
+					operator_positions.append(positions[0][:2])  # Take the first person detected by default
 
+		else:  #If there is a position but no ID, we consider that nothing is detected
+			operator_positions.append([None, None])
+			
+	return operator_positions
 
 
 
@@ -113,7 +132,7 @@ def find_ind_max(counter_list):
 def IDs_to_ban(ID_list, ID_operator):
 	to_ban=[]
 	for IDs in ID_list:
-		if IDs != None:
+		if IDs is not None:
 			if ID_operator in IDs:
 				for ID in IDs:
 					if ID != ID_operator and ID not in to_ban:
@@ -122,9 +141,9 @@ def IDs_to_ban(ID_list, ID_operator):
 
 
 def determines_operator_IDs(ID_list):
-	counter_list = [0]*100
+	counter_list = [0]*1000
 	for IDs in ID_list:
-		if IDs != None:
+		if IDs is not None:
 			for ID in IDs:
 				counter_list[int(ID)-1] += 1
 
@@ -141,8 +160,6 @@ def determines_operator_IDs(ID_list):
 
 	return operator_IDs
 
-
-yolo_body_tracker()
 
 
 # IDS=[[1,2],[1],[1,2],[1,3],[1,2,3],[2,3,4],[5],[6,7],[1,3]]
