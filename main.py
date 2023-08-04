@@ -6,13 +6,12 @@ import math
 from time import sleep
 import tracking_detectors
 
-video_path = 'videos/Georges.mp4'
+video_path = 'videos/point2.mp4'
 
 if video_path.split('.')[-1] == 'h264':  # If type is h264, we have to convert it to mp4
 	new_video_path = video_path[:-4]+'mp4'
-	os.popen(f'echo y | ffmpeg -i {video_path} {new_video_path}')  # Convert the video to mp4
+	os.system(f'echo y | ffmpeg -i {video_path} {new_video_path}')  # Convert the video to mp4
 	video_path = new_video_path
-	print(video_path)
 
 image_path = 'image.jpg'
 
@@ -274,13 +273,11 @@ def calibrate_camera():
 	for position_number in range(1, number_of_points + 1):
 		input(f"Go to position {position_number} {real_life_coordinates[position_number - 1]}\nThen press enter and turn on yourself\n")
 		print('wait')
-		camera.start_recording(f"videos_calibration/point{position_number}.h264")
-		sleep(5)  # Record for 5 seconds
-		camera.stop_recording()
+		camera.start_and_record_video(f"videos_calibration/point{position_number}.mp4", duration=5)
 
 	reference_positions = []
 	for num_point in range(1, number_of_points + 1):
-		reference_positions.append(tracking_detectors.color_finder(f"videos_calibration/point{num_point}.h264"))
+		reference_positions.append(tracking_detectors.yolo_body_tracker(f"videos_calibration/point{num_point}.mp4"))
 
 	average_positions_in_pixels = np.empty((0, 2))
 	for position in reference_positions:
@@ -293,7 +290,9 @@ def calibrate_camera():
 				number_of_points += 1
 		average[0] /= number_of_points
 		average[1] /= number_of_points
-
+		
+		print([int(average[0]), int(average[1])])
+		
 		average_positions_in_pixels = np.vstack((average_positions_in_pixels, [int(average[0]), int(average[1])]))
 
 	homography_matrix = find_homography_matrix(real_life_coordinates, average_positions_in_pixels)
