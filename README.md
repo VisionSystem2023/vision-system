@@ -18,9 +18,9 @@ Then type `cd XXXX` to enter the folder.
 
 ### 2) Installation of Poetry
 
-Once **Python3.10** is installed (and added to the PATH), type the following command to install `poetry` :
+Once **Python3.9** is installed (and added to the PATH), type the following command to install `poetry` :
 ```bash
-pip3.10 install poetry
+pip3.9 install poetry
 ```
 > `poetry` is a Python dependency manager for virtualizing environments.
 
@@ -55,13 +55,13 @@ poetry install
 After this, it is possible that some dependencies are not able to install properly so run this command (you have to be in the virtual environment when typing this command):
 
 ```bash
-pip3.10 install -r requirements.txt
+pip3.9 install -r requirements.txt
 ```
 
 To be completely sure that 'lap' library is installed, run this command :
 
 ```bash
-pip3.10 install lap
+pip3.9 install lap
 ```
 
 You can now run and modify main.py program as you want !
